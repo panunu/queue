@@ -79,7 +79,11 @@ class Processor
      */
     public function process()
     {
-        $message = $this->queue->dequeue();
+        try {
+            $message = $this->queue->dequeue();
+        } catch (\Exception $e) {
+            return false;
+        }
 
         if (!$message) {
             $this->eventDispatcher->dispatch(Events::QUEUE_EMPTY);
